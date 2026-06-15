@@ -1,7 +1,6 @@
 
 
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -25,18 +24,28 @@ class TokenBucket implements RateLimiter {
 
     @Override
     public boolean israteLimited(){
-        // pah: how to refil the bucket, check if a minute has passed, and then refil
-        // pah: track clock
-        // cron jobs and other bg timers similar always running things waste cpu cycles
-        // lazy evaluation approach based on timestamp
 
         Instant curr = Instant.now();
 
         long minutesCount = ChronoUnit.MINUTES.between(curr, lastTime);
         System.out.println("test time: "+ curr);
 
-        // int temp = minutesCount * refilRate;
+        // rate limit check 
 
+        long temp = minutesCount*refilRate;
+        // update tokens
+        if(temp+refilRate > capacity){
+            refilRate = capacity;
+        } else {
+            refilRate += temp;
+        }
+
+        if(currentTokens > 0){
+            currentTokens--;
+            return true;
+        }
+
+        
 
         return false;
     }
