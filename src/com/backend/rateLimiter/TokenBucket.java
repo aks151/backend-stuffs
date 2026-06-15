@@ -30,8 +30,6 @@ class TokenBucket implements RateLimiter {
         long minutesCount = ChronoUnit.MINUTES.between(curr, lastTime);
         System.out.println("test time: "+ curr);
 
-        // rate limit check 
-
         long temp = minutesCount*refilRate;
         // update tokens
         if(temp+refilRate > capacity){
@@ -40,6 +38,7 @@ class TokenBucket implements RateLimiter {
             refilRate += temp;
         }
 
+        // rateLimit check 
         if(currentTokens > 0){
             currentTokens--;
             return true;
