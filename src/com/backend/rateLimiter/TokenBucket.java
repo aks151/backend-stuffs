@@ -17,7 +17,7 @@ class TokenBucket implements RateLimiter {
 
         this.capacity = capacity;
         this.refilRate = refilRate;
-        this.lastTime = null;
+        this.lastTime = Instant.now();
         this.currentTokens = capacity;
 
     }
@@ -27,26 +27,29 @@ class TokenBucket implements RateLimiter {
 
         Instant curr = Instant.now();
 
-        long minutesCount = ChronoUnit.MINUTES.between(curr, lastTime);
+        // bug: we are considering a minute of duration, if two request comes at 4th second and 56th second
+        // both are in the same min, so rate wont be replenished
+        // 
+        long minutesCount = ChronoUnit.MINUTES.between(lastTime, curr);
         System.out.println("test time: "+ curr);
 
         long temp = minutesCount*refilRate;
         // update tokens
         if(temp+refilRate > capacity){
-            refilRate = capacity;
+            currentTokens = capacity;
         } else {
-            refilRate += temp;
+            currentTokens += temp;
         }
 
         // rateLimit check 
         if(currentTokens > 0){
             currentTokens--;
-            return true;
+            return false;
         }
 
         
 
-        return false;
+        return true;
     }
 
     void replinishRate() {
