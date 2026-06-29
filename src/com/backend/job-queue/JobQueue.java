@@ -1,9 +1,0 @@
-
-
-/**
- * JobQueue
- */
-public interface JobQueue {
-
-    
-}

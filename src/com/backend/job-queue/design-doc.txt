@@ -1,0 +1,14 @@
+Prob Statement - Reliable Job Queue with Dead - Letter Recovery
+
+
+Design - 
+1. A job queue to decouple components
+2. Durable queue - should not loose data bwn shut downs and start ups
+3. For durability it cannot only be a list or a queue - some decisions would be required here. TODO
+4. Job Priority
+5. Scheduled Execution
+6. Automatic Retries with exponential backoff.
+7. Jobs exceeding max retries should be put into dead letter queue, to inspect and retry.
+8. Guarantee of a job not being executed by two workers at once, concurrency(my guess)
+9. enpoint to inspect queue depth
+10. idempotency
